@@ -37,7 +37,7 @@ class LowStockNotification extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'view.emails.lowstocknotification',
+            view: 'emails.lowstocknotification',
         );
     }
 
