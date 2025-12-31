@@ -1,0 +1,1 @@
+<h1>Daily Sales Report</h1>
