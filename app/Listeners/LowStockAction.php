@@ -5,10 +5,10 @@ namespace App\Listeners;
 use App\Events\LowStockQuantity;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
-use App\Mail\LowStockNotification as NotificationMail;
+use App\Mail\LowStockNotification;
 use Illuminate\Support\Facades\Mail;
 
-class LowStockNotification
+class LowStockAction
 {
     /**
      * Create the event listener.
@@ -25,6 +25,6 @@ class LowStockNotification
     {
         $product = $event->product;
 
-        Mail::to(env('ADMIN_EMAIL_ADDRESS'))->send(new NotificationMail($product));
+        Mail::to(env('ADMIN_EMAIL_ADDRESS'))->send(new LowStockNotification($product));
     }
 }
