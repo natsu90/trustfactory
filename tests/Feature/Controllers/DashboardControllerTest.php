@@ -19,7 +19,7 @@ class DashboardControllerTest extends TestCase
             'quantity' => 5
         ]);
 
-        $response->assertStatus(200);
+        $response->assertStatus(302);
 
         $this->assertDatabaseHas('carts', [
             'user_id' => $user->getKey(),
@@ -42,7 +42,7 @@ class DashboardControllerTest extends TestCase
             'product_id' => $product->getKey()
         ]);
 
-        $response->assertStatus(200);
+        $response->assertStatus(302);
 
         $this->assertDatabaseMissing('carts', [
             'user_id' => $user->getKey(),
