@@ -40,4 +40,16 @@ class Cart extends Model
             'quantity' => 'integer'
         ];
     }
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
+
+    public function getNameAttribute()
+    {
+        return $this->product->name;
+    }
+
+    protected $appends = ['name'];
 }
