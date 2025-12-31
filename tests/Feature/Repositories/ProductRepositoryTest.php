@@ -8,6 +8,10 @@ use Tests\TestCase;
 use App\Interfaces\ProductRepositoryInterface;
 use App\Models\Product;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\LowStockNotification;
+use App\Events\LowStockQuantity;
+use Illuminate\Support\Facades\Event;
 
 class ProductRepositoryTest extends TestCase
 {
@@ -23,6 +27,8 @@ class ProductRepositoryTest extends TestCase
         parent::setUp();
 
         $this->repository = $this->app->make(ProductRepositoryInterface::class);
+
+        Mail::fake();
     }
 
     public function testGetAll()
@@ -59,5 +65,31 @@ class ProductRepositoryTest extends TestCase
 
         $this->assertInstanceOf(Product::class, $updatedProduct);
         $this->assertEquals($originalQuantity + 5, $updatedProduct->stock_quantity);
+    }
+
+    public function testLowStockQuantityEvent()
+    {
+        Event::fake(LowStockQuantity::class);
+
+        $product = Product::factory()->create([
+            'stock_quantity' => 100
+        ]);
+
+        $product->stock_quantity = 4;
+        $product->save();
+
+        Event::assertDispatched(LowStockQuantity::class);
+    }
+
+    public function testLowStockNotificationMail()
+    {
+        $product = Product::factory()->create([
+            'stock_quantity' => 100
+        ]);
+
+        $product->stock_quantity = 4;
+        $product->save();
+
+        Mail::assertSent(LowStockNotification::class);
     }
 }
